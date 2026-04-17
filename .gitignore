@@ -1,0 +1,6 @@
+.DS_Store
+
+# Local profile overrides - never commit personal triage rules or profile data
+*.local.md
+skills/linkedin-job-search/my-profile.md
+skills/**/personal-*.md
