@@ -17,7 +17,7 @@ Generic web search and fetch workflow with free-first cost logic. A baseline for
 | Built-in `web_search` / `web_fetch` | Recommended | Free | Provided by Claude - no setup |
 | FireCrawl | Optional | **500 credits free** (one-time, no card). Paid plans from $16/mo | https://firecrawl.dev - get an API key, configure the MCP endpoint |
 | Bright Data MCP | Optional | **5,000 requests/month free** for new MCP users. Paid pay-as-you-go from $1.50/1K results | https://brightdata.com/pricing/mcp-server - sign up, run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally once to provision `mcp_unlocker` and `mcp_browser` zones |
-| Brave MCP | Optional | Free Brave Search API (free tier), self-hosted MCP wrapper | No public Brave MCP exists. Get a Brave Search API key at https://brave.com/search/api and run your own MCP wrapper (e.g., https://github.com/brave/brave-search-mcp). Skip entirely if you're not self-hosting - the skill degrades gracefully to built-in web_search. |
+| Brave MCP | Optional | Free Brave Search API, local via npx | No public remote Brave MCP. Get a free Brave Search API key at https://brave.com/search/api. Claude Code: `claude mcp add brave -e BRAVE_API_KEY=... -- npx -y @modelcontextprotocol/server-brave-search`. Claude Desktop: same package via `claude_desktop_config.json`. Claude.ai web: needs an HTTP bridge. Skip if not configuring - skill degrades to built-in web_search. |
 
 If only the built-in tools are available, the skill still works. Both paid tiers are optional fallbacks.
 
@@ -29,9 +29,9 @@ Always try free tools before paid ones. Tier 1 is free (Brave, built-in); Tier 2
 
 ## Part A: Searching (find URLs, research a topic)
 
-### Search Tier 1 - Brave MCP (free, self-hosted, optional)
+### Search Tier 1 - Brave MCP (free, optional)
 
-If Brave MCP is available:
+If Brave MCP is available (runs locally via npx in Claude Code / Desktop; needs an HTTP bridge on Claude.ai web):
 
 ```
 Tool: brave_llm_context_search
@@ -225,7 +225,7 @@ Then the content. Omit the prefix only if the user asked for a summary or analys
 
 **Free:**
 
-- Brave MCP (self-hosted)
+- Brave MCP (local via npx, needs a free Brave Search API key)
 - Built-in `web_search` / `web_fetch`
 
 **Paid:**

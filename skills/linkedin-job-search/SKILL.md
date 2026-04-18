@@ -16,10 +16,10 @@ Search LinkedIn job listings, retrieve full JDs, and present a triaged shortlist
 |-----|-----------|------------------|-----------------|
 | FireCrawl | Yes | **500 credits free** (one-time, no card). Search = 2 credits per 10 results, so 500 credits covers ~2,500 search results. Paid plans from $16/mo | https://firecrawl.dev - for job URL discovery. LinkedIn scrape is BLOCKED on FireCrawl, but search is fine. |
 | Bright Data MCP | Yes | **5,000 requests/month free** for new MCP users. Paid pay-as-you-go from $1.50/1K results | https://brightdata.com/pricing/mcp-server - required for JD scraping (no free alternative for LinkedIn). Run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally once. |
-| Brave MCP | Optional | Free Brave Search API + self-hosted MCP wrapper | No public Brave MCP. If you self-host (https://brave.com/search/api + your own MCP wrapper), Brave becomes Tier 1 free search. Otherwise skip. |
+| Brave MCP | Optional | Free Brave Search API, local via npx | No public remote Brave MCP. Get a free Brave Search API key at https://brave.com/search/api. Runs locally via `@modelcontextprotocol/server-brave-search` in Claude Code or Claude Desktop - becomes Tier 1 free search. Claude.ai web needs an HTTP bridge. Otherwise skip. |
 | Built-in `web_search` | Optional | Free | Last-resort search fallback |
 
-Both required MCPs have meaningful free tiers - you can run a weekly job search at zero cost.
+Both required MCPs have meaningful free tiers - a weekly job search runs at zero cost.
 
 ---
 
@@ -253,7 +253,7 @@ Check this timestamp before claiming a search was recent.
 
 - FireCrawl search: 2 credits per 10 results. Three groups x 10 results = 6 credits per run.
 - Bright Data `scrape_as_markdown`: per-request from balance. Scrape only roles worth investigating.
-- Brave (if self-hosted), built-in `web_search`: free.
+- Brave (via free Brave API key + local npx), built-in `web_search`: free.
 
 A full weekly run is typically a few dozen credits plus a handful of per-request scrape calls.
 

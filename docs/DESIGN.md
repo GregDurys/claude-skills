@@ -1,6 +1,6 @@
 # Design
 
-Design rationale, history, and tool-selection notes for the skills in this repo. Read this after the README if you want to understand *why* each skill is shaped the way it is.
+Design rationale, history, and tool-selection notes for the skills in this repo. Read this after the README to understand *why* each skill is shaped the way it is.
 
 ---
 
@@ -119,7 +119,7 @@ Brave MCP has a hardcoded 1 req/sec rate limit. Every skill that uses Brave fire
 
 - Truly free at the Brave Search API layer (https://brave.com/search/api has a free tier).
 - Good quality search results with useful snippets.
-- There is no public Brave MCP, so consuming it requires self-hosting an MCP wrapper. This is acceptable for enthusiasts but skippable for most adopters.
+- There is no public remote Brave MCP, but the official `@modelcontextprotocol/server-brave-search` package runs locally via npx - fine for Claude Code and Claude Desktop without any hosting. Claude.ai web needs an HTTP bridge, which is more work but doable via tunnels like Tailscale Funnel.
 - Rate-limit (1 req/sec) caps throughput but is not a blocker for typical usage.
 
 ### Why built-in web_fetch / web_search remain in the mix
@@ -170,7 +170,7 @@ The `linkedin-job-search/SKILL.md` ships with placeholder markers (`<TARGET_ROLE
 
 - **Brave rate limit:** 1 req/sec hardcoded, affects multi-query workflows. Mitigated by falling back to FireCrawl for second+ queries in a turn.
 - **FireCrawl blocks:** LinkedIn, Reddit. Other sites might also be blocked silently - try the scrape and fall back to Bright Data on failure.
-- **Brave availability:** depends on the user's self-hosted MCP wrapper being reachable. All skills degrade gracefully when Brave is offline.
+- **Brave availability:** depends on your setup - Claude Code and Claude Desktop run it locally via npx so it's as reliable as the Brave API itself. Claude.ai web relies on an HTTP bridge / tunnel that can be offline. All skills degrade gracefully when Brave is unavailable.
 - **Glassdoor region:** skills default to `.co.uk`. For US-pool reviews, use `.com`. Both use the same URL structure.
 - **LinkedIn URL format:** always strip tracking parameters before scraping. The `linkedin.com/jobs/view/<jobId>/` base is canonical.
 
