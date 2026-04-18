@@ -22,8 +22,10 @@ Live test results for each skill in this repo, run against the MCP tools on the 
 | T10 | linkedin-job-search | `firecrawl_search` | query: `site:linkedin.com/jobs/view "Software Engineer" United Kingdom`, tbs: `sbd:1,qdr:w`, limit 10 | >= 3 linkedin.com/jobs/view URLs | PASS (10 URLs) |
 | T11 | linkedin-job-search | `Brightdata pro:scrape_as_markdown` | one URL from T10 (Checkout.com Senior SWE) | Full JD text with role + company + requirements | PASS (full JD, including company description, job description, requirements, seniority) |
 | T12 | linkedin-job-search | `firecrawl_scrape` on linkedin.com URL | same URL as T11 | BLOCKED (documented behaviour) | PASS (block confirmed - "we do not support this site") |
+| T13 | cve-researcher | `scripts/cve_pull.py` | `-k mikrotik --since 2024-01-01 --until 2024-12-31` | CSV + summary MD written, 120-day date chunking applied, CISA KEV loaded | PASS (2 CVEs returned; CSV + summary both written; 1569 KEV entries loaded; chunked into 4 x 120-day windows correctly) |
+| T14 | cve-researcher | `scripts/vulncheck_pull.py` with no API key | `-v mikrotik` with `VULNCHECK_API_KEY` unset | WARNING logged, exit 0, suggests cve_pull.py alternative | PASS (warning printed, exit code 0, points to cve_pull.py) |
 
-**Overall:** 12 of 12 tests produced the expected outcome. All four skills are operational.
+**Overall:** 14 of 14 tests produced the expected outcome. All five skills are operational.
 
 ---
 
@@ -54,7 +56,9 @@ The reddit-research skill steers users to `Brightdata pro:web_data_reddit_posts`
 
 - **Bright Data MCP:** required for reddit-research (Step 2) and linkedin-job-search (Step 3). Without it those skills have no way to retrieve the content they need. Free tier: 5,000 requests/month for new MCP users - covers a weekly LinkedIn run plus Reddit lookups easily.
 - **FireCrawl:** required for glassdoor-research (Step 2), linkedin-job-search (Step 1), and recommended for web-research fallbacks. Free tier: 500 credits one-time (no card) - sufficient to run the full test suite in this doc and still have credits left over.
-- **Brave MCP:** optional everywhere. All four skills degrade gracefully to built-in `web_search` or FireCrawl when Brave is unavailable.
+- **Brave MCP:** optional everywhere. All four web-research-family skills degrade gracefully to built-in `web_search` or FireCrawl when Brave is unavailable.
+- **NIST NVD API + CISA KEV:** used by cve-researcher. Free, no key required. An optional NVD API key raises the rate limit from 5 req/30s to 50 req/30s.
+- **VulnCheck NVD++:** used by cve-researcher as a cross-reference. Free community tier, key required (read from `VULNCHECK_API_KEY` env var only - no CLI flag, to avoid keys in shell history).
 
 See each SKILL.md's Dependencies table at the top for full detail.
 

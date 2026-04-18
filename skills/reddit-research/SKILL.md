@@ -1,6 +1,9 @@
 ---
 name: reddit-research
 description: Search Reddit and retrieve full thread content including comments and upvotes. Use this skill whenever asked to "search Reddit", "check Reddit", "find Reddit discussions", or fetch a specific Reddit thread URL. Uses tiered search (free Brave MCP and built-in web_search first, paid FireCrawl fallback) and Bright Data's structured web_data_reddit_posts tool for thread content - FireCrawl blocks Reddit scraping.
+metadata:
+  author: Greg Durys
+  version: '1.0'
 ---
 
 # Reddit Research

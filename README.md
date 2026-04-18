@@ -10,6 +10,7 @@ A collection of Claude skills for everyday tasks. Each skill is self-contained s
 | [reddit-research](skills/reddit-research/SKILL.md) | Reddit | Find threads and retrieve structured thread content including comments |
 | [glassdoor-research](skills/glassdoor-research/SKILL.md) | Company research | Pull reviews, ratings, and interview experiences from Glassdoor |
 | [linkedin-job-search](skills/linkedin-job-search/SKILL.md) | Job hunting | Search LinkedIn listings, scrape JDs, and triage against a configurable profile |
+| [cve-researcher](skills/cve-researcher/SKILL.md) | Security research | Pull and analyse CVEs for any vendor or product via NIST NVD + CISA KEV, with optional VulnCheck cross-reference |
 
 See [docs/DESIGN.md](docs/DESIGN.md) for the design rationale and [docs/TESTING.md](docs/TESTING.md) for live test results.
 
@@ -21,12 +22,15 @@ All three paid MCPs have meaningful free tiers. For typical personal usage you c
 
 ### Pricing at a glance
 
-| MCP | Free tier | Source |
-|-----|-----------|--------|
-| [FireCrawl](https://firecrawl.dev) | 500 credits one-time, no card | [firecrawl.dev/pricing](https://firecrawl.dev/pricing) |
+| Dependency | Free tier | Source |
+|------------|-----------|--------|
+| [FireCrawl](https://firecrawl.dev) (MCP) | 500 credits one-time, no card | [firecrawl.dev/pricing](https://firecrawl.dev/pricing) |
 | [Bright Data MCP](https://brightdata.com/pricing/mcp-server) | 5,000 requests/month (new MCP users) | [brightdata.com/pricing/mcp-server](https://brightdata.com/pricing/mcp-server) |
 | Brave MCP | Brave Search API free tier + you self-host the MCP wrapper | [brave.com/search/api](https://brave.com/search/api) |
 | Built-in `web_search` / `web_fetch` | Free, unlimited | Provided by Claude |
+| NIST NVD API 2.0 (used by cve-researcher) | Free, no key required (optional key for higher rate limits) | [nvd.nist.gov/developers](https://nvd.nist.gov/developers/request-an-api-key) |
+| CISA KEV (used by cve-researcher) | Free, no key | [cisa.gov/known-exploited-vulnerabilities-catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) |
+| VulnCheck NVD++ (used by cve-researcher) | Free community tier, key required | [vulncheck.com/community](https://vulncheck.com/community) |
 
 Each skill lists its own dependencies at the top of its `SKILL.md`. The full matrix across all four:
 
@@ -56,6 +60,7 @@ If you want only one skill, here's the minimum working dependency set (all have 
 | reddit-research | Bright Data MCP | yes - 5K requests/month free |
 | glassdoor-research | FireCrawl | yes - 500 credits one-time free |
 | linkedin-job-search | FireCrawl + Bright Data MCP | yes - both have free tiers |
+| cve-researcher | Python 3 (no MCP needed - calls NVD and CISA public APIs directly) | yes - no sign-up needed for base script; VulnCheck cross-reference needs free key |
 
 Brave is always optional.
 
@@ -121,20 +126,15 @@ Verify each MCP shows as active in the connectors list before loading skills tha
 
 Claude skills are activated by placing `SKILL.md` files in a Claude-readable skills directory.
 
-### Claude Projects (claude.ai)
+### Claude.ai (Projects)
 
-Place each skill's folder inside your project's skills directory. For a typical Project container:
+Add each skill through the web UI - you don't place files on disk manually. In your Claude.ai Project settings, find the Skills / Capabilities section and upload each `SKILL.md`. The skill's identity comes from the `name:` field in its frontmatter, so the filename you upload doesn't matter - Claude uses the frontmatter value.
 
-```
-/mnt/skills/user/web-research/SKILL.md
-/mnt/skills/user/reddit-research/SKILL.md
-/mnt/skills/user/glassdoor-research/SKILL.md
-/mnt/skills/user/linkedin-job-search/SKILL.md
-```
+Claude handles storage internally.
 
 ### Claude Code
 
-For Claude Code skill directories, the typical location is:
+Place each skill's folder at `~/.claude/skills/<skill-name>/SKILL.md`:
 
 ```
 ~/.claude/skills/web-research/SKILL.md
@@ -143,7 +143,7 @@ For Claude Code skill directories, the typical location is:
 ~/.claude/skills/linkedin-job-search/SKILL.md
 ```
 
-Consult the current Claude Code documentation for the exact path - this may change over time.
+The directory name must match the `name:` field in each skill's frontmatter. Consult the current Claude Code documentation if this location has changed.
 
 ### Important caveat
 

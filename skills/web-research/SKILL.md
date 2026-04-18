@@ -1,6 +1,9 @@
 ---
 name: web-research
 description: Tiered web search and page fetching using free tools first, then paid fallbacks. Use this skill whenever asked to fetch a URL, scrape a page, search the web, or "read this page". Uses Brave MCP and built-in web_search/web_fetch first (free), then FireCrawl and Bright Data as paid escalation. Handles JavaScript-rendered pages, bot-protected sites, and the URL approval boundary for built-in web_fetch.
+metadata:
+  author: Greg Durys
+  version: '1.0'
 ---
 
 # Web Research

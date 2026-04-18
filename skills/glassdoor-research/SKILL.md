@@ -1,6 +1,9 @@
 ---
 name: glassdoor-research
 description: Pull company reviews, ratings breakdowns, and interview experiences from Glassdoor. Use this skill whenever asked to "check Glassdoor", "pull reviews for", "what's it like to work at", "research [company]", or "interview process at". Uses FireCrawl with stealth proxy to bypass Glassdoor's aggressive bot detection, with Bright Data as a deeper fallback.
+metadata:
+  author: Greg Durys
+  version: '1.0'
 ---
 
 # Glassdoor Research

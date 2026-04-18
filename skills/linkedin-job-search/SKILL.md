@@ -1,6 +1,9 @@
 ---
 name: linkedin-job-search
 description: Search LinkedIn for job listings, retrieve full job descriptions, and triage results against a configured profile. Use this skill whenever asked to "run my job search", "find LinkedIn jobs", "search for roles", or similar. Uses FireCrawl search to discover job URLs (free Brave MCP as optional Tier 1) and Bright Data scrape_as_markdown for JD content - FireCrawl blocks LinkedIn scraping. Customise the Profile section below with your own target roles, locations, and triage rules before first use.
+metadata:
+  author: Greg Durys
+  version: '1.0'
 ---
 
 # LinkedIn Job Search
