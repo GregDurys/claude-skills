@@ -14,9 +14,9 @@ Search LinkedIn job listings, retrieve full JDs, and present a triaged shortlist
 
 | MCP | Required? | Cost / free tier | Sign-up / setup |
 |-----|-----------|------------------|-----------------|
-| FireCrawl | Yes | **500 credits free** (one-time, no card). Search = 2 credits per 10 results, so 500 credits covers ~2,500 search results. Paid plans from $16/mo | https://firecrawl.dev - for job URL discovery. LinkedIn scrape is BLOCKED on FireCrawl, but search is fine. |
-| Bright Data MCP | Yes | **5,000 requests/month free** for new MCP users. Paid pay-as-you-go from $1.50/1K results | https://brightdata.com/pricing/mcp-server - required for JD scraping (no free alternative for LinkedIn). Run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally once. |
-| Brave MCP | Optional | Free Brave Search API, local via npx | No public remote Brave MCP. Get a free Brave Search API key at https://brave.com/search/api. Runs locally via `@modelcontextprotocol/server-brave-search` in Claude Code or Claude Desktop - becomes Tier 1 free search. Claude.ai web needs an HTTP bridge. Otherwise skip. |
+| [FireCrawl MCP](https://github.com/firecrawl/firecrawl-mcp-server) | Yes | **500 credits free** (one-time, no card). Search = 2 credits per 10 results, so 500 credits covers ~2,500 search results. Paid plans from $16/mo | https://firecrawl.dev - for job URL discovery. LinkedIn scrape is BLOCKED on FireCrawl, but search is fine. |
+| [Bright Data MCP](https://github.com/brightdata/brightdata-mcp) | Yes | **5,000 requests/month free** for new MCP users. Paid pay-as-you-go from $1.50/1K results | https://brightdata.com/pricing/mcp-server - required for JD scraping (no free alternative for LinkedIn). Run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally once. |
+| [Brave MCP](https://github.com/brave/brave-search-mcp-server) | Optional | Free Brave Search API, local via npx | No public remote Brave MCP. Get a free Brave Search API key at https://brave.com/search/api. Runs locally via `@brave/brave-search-mcp-server` in Claude Code or Claude Desktop - becomes Tier 1 free search. Claude.ai web needs an HTTP bridge. Otherwise skip. |
 | Built-in `web_search` | Optional | Free | Last-resort search fallback |
 
 Both required MCPs have meaningful free tiers - a weekly job search runs at zero cost.

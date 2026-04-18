@@ -15,9 +15,9 @@ Generic web search and fetch workflow with free-first cost logic. A baseline for
 | MCP | Required? | Cost / free tier | Sign-up / setup |
 |-----|-----------|------------------|-----------------|
 | Built-in `web_search` / `web_fetch` | Recommended | Free | Provided by Claude - no setup |
-| FireCrawl | Optional | **500 credits free** (one-time, no card). Paid plans from $16/mo | https://firecrawl.dev - get an API key, configure the MCP endpoint |
-| Bright Data MCP | Optional | **5,000 requests/month free** for new MCP users. Paid pay-as-you-go from $1.50/1K results | https://brightdata.com/pricing/mcp-server - sign up, run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally once to provision `mcp_unlocker` and `mcp_browser` zones |
-| Brave MCP | Optional | Free Brave Search API, local via npx | No public remote Brave MCP. Get a free Brave Search API key at https://brave.com/search/api. Claude Code: `claude mcp add brave -e BRAVE_API_KEY=... -- npx -y @modelcontextprotocol/server-brave-search`. Claude Desktop: same package via `claude_desktop_config.json`. Claude.ai web: needs an HTTP bridge. Skip if not configuring - skill degrades to built-in web_search. |
+| [FireCrawl MCP](https://github.com/firecrawl/firecrawl-mcp-server) | Optional | **500 credits free** (one-time, no card). Paid plans from $16/mo | https://firecrawl.dev - get an API key, configure the MCP endpoint |
+| [Bright Data MCP](https://github.com/brightdata/brightdata-mcp) | Optional | **5,000 requests/month free** for new MCP users. Paid pay-as-you-go from $1.50/1K results | https://brightdata.com/pricing/mcp-server - sign up, run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally once to provision `mcp_unlocker` and `mcp_browser` zones |
+| [Brave MCP](https://github.com/brave/brave-search-mcp-server) | Optional | Free Brave Search API, local via npx | No public remote Brave MCP. Get a free Brave Search API key at https://brave.com/search/api. Claude Code: `claude mcp add brave -e BRAVE_API_KEY=... -- npx -y @brave/brave-search-mcp-server`. Claude Desktop: same package via `claude_desktop_config.json`. Claude.ai web: needs an HTTP bridge. Skip if not configuring - skill degrades to built-in web_search. |
 
 If only the built-in tools are available, the skill still works. Both paid tiers are optional fallbacks.
 

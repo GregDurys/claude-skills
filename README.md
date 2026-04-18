@@ -24,9 +24,9 @@ All three paid MCPs have meaningful free tiers. For typical personal usage, ever
 
 | Dependency | Free tier | Source |
 |------------|-----------|--------|
-| [FireCrawl](https://firecrawl.dev) (MCP) | 500 credits one-time, no card | [firecrawl.dev/pricing](https://firecrawl.dev/pricing) |
-| [Bright Data MCP](https://brightdata.com/pricing/mcp-server) | 5,000 requests/month (new MCP users) | [brightdata.com/pricing/mcp-server](https://brightdata.com/pricing/mcp-server) |
-| [Brave MCP](https://brave.com/search/api) | Brave Search API free tier + runs locally via npx (Claude Code / Desktop) | [brave.com/search/api](https://brave.com/search/api) |
+| [FireCrawl MCP](https://github.com/firecrawl/firecrawl-mcp-server) | 500 credits one-time, no card | [firecrawl.dev/pricing](https://firecrawl.dev/pricing) |
+| [Bright Data MCP](https://github.com/brightdata/brightdata-mcp) | 5,000 requests/month (new MCP users) | [brightdata.com/pricing/mcp-server](https://brightdata.com/pricing/mcp-server) |
+| [Brave MCP](https://github.com/brave/brave-search-mcp-server) | Brave Search API free tier + runs locally via npx (Claude Code / Desktop) | [brave.com/search/api](https://brave.com/search/api) |
 | Built-in `web_search` / `web_fetch` | Free, unlimited | Provided by Claude |
 | NIST NVD API 2.0 (used by cve-researcher) | Free, no key required (optional key for higher rate limits) | [nvd.nist.gov/developers](https://nvd.nist.gov/developers/request-an-api-key) |
 | CISA KEV (used by cve-researcher) | Free, no key | [cisa.gov/known-exploited-vulnerabilities-catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) |
@@ -37,9 +37,9 @@ Each skill lists its own dependencies at the top of its `SKILL.md`. The full mat
 | MCP | Free tier | Paid pricing | Sign-up / setup | Used by |
 |-----|-----------|--------------|-----------------|---------|
 | Built-in `web_search` / `web_fetch` | Free, unlimited | N/A | No setup - provided by Claude | web-research, reddit-research, glassdoor-research, linkedin-job-search (all as fallback) |
-| [FireCrawl](https://firecrawl.dev) | **500 credits one-time** (no card required) | Hobby $16/mo (3K credits), Standard, Growth, Scale | Sign up at firecrawl.dev, get API key, configure the MCP endpoint. Search: 2 credits/10 results. Basic scrape: 1 credit/page. Stealth scrape: 5 credits/page. | web-research (optional), reddit-research (optional, discovery only), glassdoor-research (required), linkedin-job-search (required) |
-| [Bright Data MCP](https://brightdata.com/pricing/mcp-server) | **5,000 requests/month** (new MCP users) | Pay-as-you-go $1.50/1K results, or $499/mo for 380K | Sign up at brightdata.com. One-time setup: run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally to provision `mcp_unlocker` and `mcp_browser` zones. | web-research (optional), reddit-research (required), linkedin-job-search (required) |
-| [Brave MCP](https://brave.com/search/api) | Free (Brave Search API free tier) | Runs locally via npx (`@modelcontextprotocol/server-brave-search`) in Claude Code and Claude Desktop - no hosting required. Claude.ai web would need an HTTP bridge. | Get a Brave Search API key at https://brave.com/search/api. See "Configuring MCPs" below for the exact Claude Code / Claude Desktop / Claude.ai setup. | All skills as optional Tier 1 free search |
+| [FireCrawl MCP](https://github.com/firecrawl/firecrawl-mcp-server) | **500 credits one-time** (no card required) | Hobby $16/mo (3K credits), Standard, Growth, Scale | Sign up at firecrawl.dev, get API key, configure the MCP endpoint. Search: 2 credits/10 results. Basic scrape: 1 credit/page. Stealth scrape: 5 credits/page. | web-research (optional), reddit-research (optional, discovery only), glassdoor-research (required), linkedin-job-search (required) |
+| [Bright Data MCP](https://github.com/brightdata/brightdata-mcp) | **5,000 requests/month** (new MCP users) | Pay-as-you-go $1.50/1K results, or $499/mo for 380K | Sign up at brightdata.com. One-time setup: run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally to provision `mcp_unlocker` and `mcp_browser` zones. | web-research (optional), reddit-research (required), linkedin-job-search (required) |
+| [Brave MCP](https://github.com/brave/brave-search-mcp-server) | Free (Brave Search API free tier) | Runs locally via npx (`@brave/brave-search-mcp-server`) in Claude Code and Claude Desktop - no hosting required. Claude.ai web would need an HTTP bridge. | Get a Brave Search API key at https://brave.com/search/api. See "Configuring MCPs" below for the exact Claude Code / Claude Desktop / Claude.ai setup. | All skills as optional Tier 1 free search |
 
 ### Try everything for free
 
@@ -58,15 +58,15 @@ For a single skill only, here is the minimum working dependency set (all have fr
 |-------|----------------------|-------------------|
 | web-research | none required (degrades to built-in tools) | yes - no sign-up needed |
 | reddit-research | Bright Data MCP | yes - 5K requests/month free |
-| glassdoor-research | FireCrawl | yes - 500 credits one-time free |
-| linkedin-job-search | FireCrawl + Bright Data MCP | yes - both have free tiers |
+| glassdoor-research | FireCrawl MCP | yes - 500 credits one-time free |
+| linkedin-job-search | FireCrawl MCP + Bright Data MCP | yes - both have free tiers |
 | cve-researcher | Python 3 (no MCP needed - calls NVD and CISA public APIs directly) | yes - no sign-up needed for base script; VulnCheck cross-reference needs free key |
 
 Brave is always optional.
 
 ### Brave MCP caveat
 
-There is no public remote Brave MCP. For **Claude Code** and **Claude Desktop** the official `@modelcontextprotocol/server-brave-search` package runs locally via npx - no hosting required, just an API key. For **Claude.ai web** an HTTP-wrapped bridge is needed (e.g., `mcp-proxy`) or a tunnel exposing the local stdio server (Tailscale Funnel is one option).
+There is no public remote Brave MCP. For **Claude Code** and **Claude Desktop** the official `@brave/brave-search-mcp-server` package runs locally via npx - no hosting required, just an API key. For **Claude.ai web** an HTTP-wrapped bridge is needed (e.g., `mcp-proxy`) or a tunnel exposing the local stdio server (Tailscale Funnel is one option).
 
 If the Brave API key is unavailable or not configured, skip Brave entirely. All skills treat Brave failures as silent skips and degrade to built-in `web_search` or FireCrawl. The skills work on the other MCPs alone.
 
@@ -100,10 +100,10 @@ claude mcp add brightdata --url https://mcp.brightdata.com/mcp?token=YOUR_API_TO
 claude mcp add brightdata -e API_TOKEN=YOUR_API_TOKEN -e PRO_MODE=true -- npx -y @brightdata/mcp
 ```
 
-**Brave** (optional) - no public remote Brave MCP. The official `@modelcontextprotocol/server-brave-search` package runs locally via npx; get a free API key at https://brave.com/search/api:
+**Brave** (optional) - no public remote Brave MCP. The official `@brave/brave-search-mcp-server` package runs locally via npx; get a free API key at https://brave.com/search/api:
 
 ```bash
-claude mcp add brave -e BRAVE_API_KEY=YOUR_API_KEY -- npx -y @modelcontextprotocol/server-brave-search
+claude mcp add brave -e BRAVE_API_KEY=YOUR_API_KEY -- npx -y @brave/brave-search-mcp-server
 ```
 
 Skip Brave if the API key is not configured - the skills degrade to built-in `web_search` and FireCrawl.
@@ -130,7 +130,7 @@ Edit the config file and add entries under `mcpServers`:
     },
     "brave-search": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+      "args": ["-y", "@brave/brave-search-mcp-server"],
       "env": {"BRAVE_API_KEY": "YOUR_API_KEY"}
     }
   }
@@ -145,9 +145,9 @@ Add MCP connectors via `Settings > Connectors`. This route uses HTTP / SSE endpo
 
 | MCP | Endpoint |
 |-----|----------|
-| FireCrawl | `https://mcp.firecrawl.dev/YOUR_API_KEY/v2/mcp` |
-| Bright Data | `https://mcp.brightdata.com/mcp?token=YOUR_API_TOKEN` |
-| Brave | No public HTTP endpoint - self-host an HTTP-wrapped bridge (e.g., `mcp-proxy`) or a tunnel such as Tailscale Funnel exposing the local stdio server. Skip if not self-hosting. |
+| [FireCrawl MCP](https://github.com/firecrawl/firecrawl-mcp-server) | `https://mcp.firecrawl.dev/YOUR_API_KEY/v2/mcp` |
+| [Bright Data MCP](https://github.com/brightdata/brightdata-mcp) | `https://mcp.brightdata.com/mcp?token=YOUR_API_TOKEN` |
+| [Brave MCP](https://github.com/brave/brave-search-mcp-server) | No public HTTP endpoint - self-host an HTTP-wrapped bridge (e.g., `mcp-proxy`) or a tunnel such as Tailscale Funnel exposing the local stdio server. Skip if not self-hosting. |
 
 Verify each MCP shows as active in the connectors list before loading skills that depend on it.
 

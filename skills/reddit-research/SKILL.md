@@ -14,10 +14,10 @@ Search Reddit threads and retrieve their structured content (posts, comments, up
 
 | MCP | Required? | Cost / free tier | Sign-up / setup |
 |-----|-----------|------------------|-----------------|
-| Bright Data MCP | Yes | **5,000 requests/month free** for new MCP users. Paid pay-as-you-go from $1.50/1K results | https://brightdata.com/pricing/mcp-server - required for thread content. Run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally once to provision required zones. |
-| Brave MCP | Optional | Free Brave Search API, local via npx | No public remote Brave MCP. Get a free Brave Search API key at https://brave.com/search/api. Runs locally via `@modelcontextprotocol/server-brave-search` in Claude Code or Claude Desktop. Claude.ai web needs an HTTP bridge. Skip if not configuring - the skill uses built-in web_search or FireCrawl instead. |
+| [Bright Data MCP](https://github.com/brightdata/brightdata-mcp) | Yes | **5,000 requests/month free** for new MCP users. Paid pay-as-you-go from $1.50/1K results | https://brightdata.com/pricing/mcp-server - required for thread content. Run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally once to provision required zones. |
+| [Brave MCP](https://github.com/brave/brave-search-mcp-server) | Optional | Free Brave Search API, local via npx | No public remote Brave MCP. Get a free Brave Search API key at https://brave.com/search/api. Runs locally via `@brave/brave-search-mcp-server` in Claude Code or Claude Desktop. Claude.ai web needs an HTTP bridge. Skip if not configuring - the skill uses built-in web_search or FireCrawl instead. |
 | Built-in `web_search` | Optional | Free | Fallback for thread discovery |
-| FireCrawl | Optional | **500 credits free** (one-time, no card). Paid plans from $16/mo | https://firecrawl.dev - for thread discovery only. `firecrawl_scrape` IS BLOCKED on reddit.com. |
+| [FireCrawl MCP](https://github.com/firecrawl/firecrawl-mcp-server) | Optional | **500 credits free** (one-time, no card). Paid plans from $16/mo | https://firecrawl.dev - for thread discovery only. `firecrawl_scrape` IS BLOCKED on reddit.com. |
 
 ## Why Bright Data for fetching
 

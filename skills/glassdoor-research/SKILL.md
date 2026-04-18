@@ -14,9 +14,9 @@ Retrieve Glassdoor reviews, ratings, and interview data; present them in a struc
 
 | MCP | Required? | Cost / free tier | Sign-up / setup |
 |-----|-----------|------------------|-----------------|
-| FireCrawl | Yes | **500 credits free** (one-time, no card). Stealth scrape = 5 credits/page, so 500 credits covers ~100 Glassdoor pages. Paid plans from $16/mo | https://firecrawl.dev - get an API key, configure the MCP endpoint |
-| Bright Data MCP | Optional | **5,000 requests/month free** for new MCP users. Paid pay-as-you-go from $1.50/1K results | https://brightdata.com/pricing/mcp-server - fallback if FireCrawl stealth is blocked. Run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally once. |
-| FireCrawl search or built-in `web_search` | Recommended | Same FireCrawl free tier above, or free built-in | For discovering the correct employer ID when starting from a company name |
+| [FireCrawl MCP](https://github.com/firecrawl/firecrawl-mcp-server) | Yes | **500 credits free** (one-time, no card). Stealth scrape = 5 credits/page, so 500 credits covers ~100 Glassdoor pages. Paid plans from $16/mo | https://firecrawl.dev - get an API key, configure the MCP endpoint |
+| [Bright Data MCP](https://github.com/brightdata/brightdata-mcp) | Optional | **5,000 requests/month free** for new MCP users. Paid pay-as-you-go from $1.50/1K results | https://brightdata.com/pricing/mcp-server - fallback if FireCrawl stealth is blocked. Run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally once. |
+| FireCrawl MCP search or built-in `web_search` | Recommended | Same FireCrawl free tier above, or free built-in | For discovering the correct employer ID when starting from a company name |
 
 ## Why stealth proxy
 

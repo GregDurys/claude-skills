@@ -119,7 +119,7 @@ Brave MCP has a hardcoded 1 req/sec rate limit. Every skill that uses Brave fire
 
 - Truly free at the Brave Search API layer (https://brave.com/search/api has a free tier).
 - Good quality search results with useful snippets.
-- There is no public remote Brave MCP, but the official `@modelcontextprotocol/server-brave-search` package runs locally via npx - fine for Claude Code and Claude Desktop without any hosting. Claude.ai web needs an HTTP bridge, which is more work but doable via tunnels like Tailscale Funnel.
+- There is no public remote Brave MCP, but the official `@brave/brave-search-mcp-server` package runs locally via npx - fine for Claude Code and Claude Desktop without any hosting. Claude.ai web needs an HTTP bridge, which is more work but doable via tunnels like Tailscale Funnel.
 - Rate-limit (1 req/sec) caps throughput but is not a blocker for typical usage.
 
 ### Why built-in web_fetch / web_search remain in the mix
