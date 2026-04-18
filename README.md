@@ -26,7 +26,7 @@ All three paid MCPs have meaningful free tiers. For typical personal usage, ever
 |------------|-----------|--------|
 | [FireCrawl](https://firecrawl.dev) (MCP) | 500 credits one-time, no card | [firecrawl.dev/pricing](https://firecrawl.dev/pricing) |
 | [Bright Data MCP](https://brightdata.com/pricing/mcp-server) | 5,000 requests/month (new MCP users) | [brightdata.com/pricing/mcp-server](https://brightdata.com/pricing/mcp-server) |
-| Brave MCP | Brave Search API free tier + runs locally via npx (Claude Code / Desktop) | [brave.com/search/api](https://brave.com/search/api) |
+| [Brave MCP](https://brave.com/search/api) | Brave Search API free tier + runs locally via npx (Claude Code / Desktop) | [brave.com/search/api](https://brave.com/search/api) |
 | Built-in `web_search` / `web_fetch` | Free, unlimited | Provided by Claude |
 | NIST NVD API 2.0 (used by cve-researcher) | Free, no key required (optional key for higher rate limits) | [nvd.nist.gov/developers](https://nvd.nist.gov/developers/request-an-api-key) |
 | CISA KEV (used by cve-researcher) | Free, no key | [cisa.gov/known-exploited-vulnerabilities-catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) |
@@ -39,7 +39,7 @@ Each skill lists its own dependencies at the top of its `SKILL.md`. The full mat
 | Built-in `web_search` / `web_fetch` | Free, unlimited | N/A | No setup - provided by Claude | web-research, reddit-research, glassdoor-research, linkedin-job-search (all as fallback) |
 | [FireCrawl](https://firecrawl.dev) | **500 credits one-time** (no card required) | Hobby $16/mo (3K credits), Standard, Growth, Scale | Sign up at firecrawl.dev, get API key, configure the MCP endpoint. Search: 2 credits/10 results. Basic scrape: 1 credit/page. Stealth scrape: 5 credits/page. | web-research (optional), reddit-research (optional, discovery only), glassdoor-research (required), linkedin-job-search (required) |
 | [Bright Data MCP](https://brightdata.com/pricing/mcp-server) | **5,000 requests/month** (new MCP users) | Pay-as-you-go $1.50/1K results, or $499/mo for 380K | Sign up at brightdata.com. One-time setup: run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally to provision `mcp_unlocker` and `mcp_browser` zones. | web-research (optional), reddit-research (required), linkedin-job-search (required) |
-| Brave MCP | Free (Brave Search API free tier) | Runs locally via npx (`@modelcontextprotocol/server-brave-search`) in Claude Code and Claude Desktop - no hosting required. Claude.ai web would need an HTTP bridge. | Get a Brave Search API key at https://brave.com/search/api. See "Configuring MCPs" below for the exact Claude Code / Claude Desktop / Claude.ai setup. | All skills as optional Tier 1 free search |
+| [Brave MCP](https://brave.com/search/api) | Free (Brave Search API free tier) | Runs locally via npx (`@modelcontextprotocol/server-brave-search`) in Claude Code and Claude Desktop - no hosting required. Claude.ai web would need an HTTP bridge. | Get a Brave Search API key at https://brave.com/search/api. See "Configuring MCPs" below for the exact Claude Code / Claude Desktop / Claude.ai setup. | All skills as optional Tier 1 free search |
 
 ### Try everything for free
 
