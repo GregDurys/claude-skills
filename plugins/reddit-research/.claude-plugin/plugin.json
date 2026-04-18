@@ -1,0 +1,8 @@
+{
+  "name": "reddit-research",
+  "description": "Search Reddit and retrieve full thread content including comments and upvotes",
+  "version": "1.0.0",
+  "author": {
+    "name": "Greg Durys"
+  }
+}

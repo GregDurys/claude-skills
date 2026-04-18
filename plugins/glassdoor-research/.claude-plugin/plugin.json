@@ -1,0 +1,8 @@
+{
+  "name": "glassdoor-research",
+  "description": "Pull company reviews, ratings, and interview experiences from Glassdoor",
+  "version": "1.0.0",
+  "author": {
+    "name": "Greg Durys"
+  }
+}

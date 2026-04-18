@@ -1,0 +1,53 @@
+{
+  "name": "claude-skills",
+  "owner": {
+    "name": "Greg Durys"
+  },
+  "metadata": {
+    "description": "Claude skills for web research, CVE enumeration, Reddit discussions, Glassdoor reviews, and LinkedIn job searching",
+    "version": "1.0.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "web-research",
+      "source": "web-research",
+      "description": "Tiered web search and page fetching using free tools first, then paid fallbacks",
+      "version": "1.0.0",
+      "author": { "name": "Greg Durys" },
+      "keywords": ["web-research", "scraping", "search", "firecrawl", "brave"]
+    },
+    {
+      "name": "reddit-research",
+      "source": "reddit-research",
+      "description": "Search Reddit and retrieve full thread content including comments and upvotes",
+      "version": "1.0.0",
+      "author": { "name": "Greg Durys" },
+      "keywords": ["reddit", "research", "threads", "comments"]
+    },
+    {
+      "name": "glassdoor-research",
+      "source": "glassdoor-research",
+      "description": "Pull company reviews, ratings, and interview experiences from Glassdoor",
+      "version": "1.0.0",
+      "author": { "name": "Greg Durys" },
+      "keywords": ["glassdoor", "reviews", "company-research", "interviews"]
+    },
+    {
+      "name": "linkedin-job-search",
+      "source": "linkedin-job-search",
+      "description": "Search LinkedIn for job listings, retrieve JDs, and triage against a configurable profile",
+      "version": "1.0.0",
+      "author": { "name": "Greg Durys" },
+      "keywords": ["linkedin", "jobs", "job-search", "career"]
+    },
+    {
+      "name": "cve-researcher",
+      "source": "cve-researcher",
+      "description": "Pull and analyse CVEs from NVD API + CISA KEV, with optional VulnCheck cross-reference",
+      "version": "1.4.0",
+      "author": { "name": "Greg Durys" },
+      "keywords": ["cve", "security", "vulnerability", "nvd", "cisa", "vulncheck"]
+    }
+  ]
+}

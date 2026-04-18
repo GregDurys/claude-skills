@@ -1,0 +1,8 @@
+{
+  "name": "web-research",
+  "description": "Tiered web search and page fetching using free tools first, then paid fallbacks",
+  "version": "1.0.0",
+  "author": {
+    "name": "Greg Durys"
+  }
+}

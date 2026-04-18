@@ -74,7 +74,7 @@ The cost principle matters: a typical weekly LinkedIn job run at Tier 1 + Tier 2
 
 ### Self-contained skills
 
-Each SKILL.md is standalone. A user who wants only the Glassdoor workflow should be able to grab `skills/glassdoor-research/SKILL.md` and not need the others. Some tier logic is therefore duplicated across skills - this is deliberate, not an oversight.
+Each SKILL.md is standalone. A user who wants only the Glassdoor workflow should be able to grab `plugins/glassdoor-research/skills/glassdoor-research/SKILL.md` (or install just that plugin via `/plugin install glassdoor-research@claude-skills`) and not need the others. Some tier logic is therefore duplicated across skills - this is deliberate, not an oversight.
 
 ### Free by default, paid by exception
 

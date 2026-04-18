@@ -1,0 +1,8 @@
+{
+  "name": "linkedin-job-search",
+  "description": "Search LinkedIn for job listings, retrieve JDs, and triage against a configurable profile",
+  "version": "1.0.0",
+  "author": {
+    "name": "Greg Durys"
+  }
+}

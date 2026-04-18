@@ -6,11 +6,11 @@ A collection of Claude skills for everyday tasks. Each skill is self-contained, 
 
 | Skill | Purpose | One-line summary |
 |-------|---------|------------------|
-| [web-research](skills/web-research/SKILL.md) | Generic baseline | Tiered web search and page fetching with free-first cost logic |
-| [reddit-research](skills/reddit-research/SKILL.md) | Reddit | Find threads and retrieve structured thread content including comments |
-| [glassdoor-research](skills/glassdoor-research/SKILL.md) | Company research | Pull reviews, ratings, and interview experiences from Glassdoor |
-| [linkedin-job-search](skills/linkedin-job-search/SKILL.md) | Job hunting | Search LinkedIn listings, scrape JDs, and triage against a configurable profile |
-| [cve-researcher](skills/cve-researcher/SKILL.md) | Security research | Pull and analyse CVEs for any vendor or product via NIST NVD + CISA KEV, with optional VulnCheck cross-reference |
+| [web-research](plugins/web-research/skills/web-research/SKILL.md) | Generic baseline | Tiered web search and page fetching with free-first cost logic |
+| [reddit-research](plugins/reddit-research/skills/reddit-research/SKILL.md) | Reddit | Find threads and retrieve structured thread content including comments |
+| [glassdoor-research](plugins/glassdoor-research/skills/glassdoor-research/SKILL.md) | Company research | Pull reviews, ratings, and interview experiences from Glassdoor |
+| [linkedin-job-search](plugins/linkedin-job-search/skills/linkedin-job-search/SKILL.md) | Job hunting | Search LinkedIn listings, scrape JDs, and triage against a configurable profile |
+| [cve-researcher](plugins/cve-researcher/skills/cve-researcher/SKILL.md) | Security research | Pull and analyse CVEs for any vendor or product via NIST NVD + CISA KEV, with optional VulnCheck cross-reference |
 
 See [docs/DESIGN.md](docs/DESIGN.md) for the design rationale and [docs/TESTING.md](docs/TESTING.md) for live test results.
 
@@ -155,26 +155,40 @@ Verify each MCP shows as active in the connectors list before loading skills tha
 
 ## Installation
 
-Claude skills are activated by placing `SKILL.md` files in a Claude-readable skills directory.
+This repo is structured as a Claude Code **plugin marketplace** (each skill is its own installable plugin). Three install paths are supported; pick by client.
 
-### Claude.ai (Projects)
+### Claude Code (plugin marketplace, recommended)
 
-Add each skill through the web UI - no manual file placement on disk. In the Claude.ai Project settings, find the Skills / Capabilities section and upload each `SKILL.md`. The skill's identity comes from the `name:` field in its frontmatter, so the uploaded filename is irrelevant - Claude uses the frontmatter value.
+Install individual skills from the marketplace:
 
-Claude handles storage internally.
+```
+/plugin marketplace add GregDurys/claude-skills
+/plugin install web-research@claude-skills
+/plugin install cve-researcher@claude-skills
+```
 
-### Claude Code
+Each skill installs independently. Run `/plugin install <name>@claude-skills` for each one needed. Updates arrive via `/plugin marketplace update`. Available plugin names: `web-research`, `reddit-research`, `glassdoor-research`, `linkedin-job-search`, `cve-researcher`.
 
-Place each skill's folder at `~/.claude/skills/<skill-name>/SKILL.md`:
+### Claude Code (manual copy)
+
+If the plugin marketplace path is unavailable, copy each skill folder into `~/.claude/skills/<skill-name>/`:
 
 ```
 ~/.claude/skills/web-research/SKILL.md
 ~/.claude/skills/reddit-research/SKILL.md
 ~/.claude/skills/glassdoor-research/SKILL.md
 ~/.claude/skills/linkedin-job-search/SKILL.md
+~/.claude/skills/cve-researcher/SKILL.md
 ```
 
-The directory name must match the `name:` field in each skill's frontmatter. Consult the current Claude Code documentation if this location has changed.
+Copy from `plugins/<name>/skills/<name>/` in this repo. The directory name must match the `name:` field in each skill's frontmatter.
+
+### Claude Desktop and Claude.ai (Projects)
+
+Neither currently supports Claude Code's plugin marketplace protocol directly. For those clients:
+
+- **Claude Desktop**: uses local stdio MCPs from `claude_desktop_config.json`; skills themselves are added through the web UI, since Desktop shares the claude.ai skill store.
+- **Claude.ai (Projects)**: add each skill through the web UI. In Project settings, find the Skills / Capabilities section and upload each `SKILL.md` from this repo. The skill's identity comes from the `name:` field in its frontmatter, so the uploaded filename is irrelevant - Claude uses the frontmatter value. Claude handles storage internally.
 
 ### Important caveat
 
@@ -222,16 +236,33 @@ See [docs/DESIGN.md](docs/DESIGN.md) for the full rationale.
 
 ```
 claude-skills/
-  README.md                              this file
+  README.md                                           this file
   .gitignore
+  .claude-plugin/
+    marketplace.json                                  plugin marketplace catalogue
   docs/
-    DESIGN.md                            design rationale and history
-    TESTING.md                           live test cases and results
-  skills/
-    web-research/SKILL.md
-    reddit-research/SKILL.md
-    glassdoor-research/SKILL.md
-    linkedin-job-search/SKILL.md
+    DESIGN.md                                         design rationale and history
+    TESTING.md                                        live test cases and results
+  plugins/
+    web-research/
+      .claude-plugin/plugin.json                      per-plugin manifest
+      skills/web-research/SKILL.md
+    reddit-research/
+      .claude-plugin/plugin.json
+      skills/reddit-research/SKILL.md
+    glassdoor-research/
+      .claude-plugin/plugin.json
+      skills/glassdoor-research/SKILL.md
+    linkedin-job-search/
+      .claude-plugin/plugin.json
+      skills/linkedin-job-search/SKILL.md
+    cve-researcher/
+      .claude-plugin/plugin.json
+      skills/cve-researcher/
+        SKILL.md
+        scripts/cve_pull.py                           NVD + CISA KEV pull
+        scripts/vulncheck_pull.py                     VulnCheck cross-reference
+        docs/TESTING.md                               skill-level test cases
 ```
 
 ---
