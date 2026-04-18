@@ -84,26 +84,26 @@ Add each MCP via `claude mcp add`. Remote endpoints are simplest where they exis
 
 ```bash
 # Remote hosted (recommended)
-claude mcp add firecrawl --url https://mcp.firecrawl.dev/YOUR_API_KEY/v2/mcp
+claude mcp add --transport http --scope user firecrawl https://mcp.firecrawl.dev/YOUR_API_KEY/v2/mcp
 
 # Or local via npx
-claude mcp add firecrawl -e FIRECRAWL_API_KEY=YOUR_API_KEY -- npx -y firecrawl-mcp
+claude mcp add --scope user -e FIRECRAWL_API_KEY=YOUR_API_KEY firecrawl -- npx -y firecrawl-mcp
 ```
 
 **Bright Data** - sign up at https://brightdata.com for an API token (free tier: 5,000 requests/month):
 
 ```bash
-# Remote hosted (recommended)
-claude mcp add brightdata --url https://mcp.brightdata.com/mcp?token=YOUR_API_TOKEN
+# Remote hosted (recommended) - quote the URL because of the ?token= query string
+claude mcp add --transport http --scope user brightdata "https://mcp.brightdata.com/mcp?token=YOUR_API_TOKEN"
 
 # Or local via npx (auto-provisions required zones on first run)
-claude mcp add brightdata -e API_TOKEN=YOUR_API_TOKEN -e PRO_MODE=true -- npx -y @brightdata/mcp
+claude mcp add --scope user -e API_TOKEN=YOUR_API_TOKEN -e PRO_MODE=true brightdata -- npx -y @brightdata/mcp
 ```
 
 **Brave** (optional) - no public remote Brave MCP. The official `@brave/brave-search-mcp-server` package runs locally via npx; get a free API key at https://brave.com/search/api:
 
 ```bash
-claude mcp add brave -e BRAVE_API_KEY=YOUR_API_KEY -- npx -y @brave/brave-search-mcp-server
+claude mcp add --scope user -e BRAVE_API_KEY=YOUR_API_KEY brave -- npx -y @brave/brave-search-mcp-server
 ```
 
 Skip Brave if the API key is not configured - the skills degrade to built-in `web_search` and FireCrawl.
