@@ -66,7 +66,7 @@ Brave is always optional.
 
 ### Brave MCP caveat
 
-There is no public remote Brave MCP. For **Claude Code** and **Claude Desktop** the official `@brave/brave-search-mcp-server` package runs locally via npx - no hosting required, just an API key. For **Claude.ai web** an HTTP-wrapped bridge is needed (e.g., `mcp-proxy`) or a tunnel exposing the local stdio server (Tailscale Funnel is one option).
+There is no public remote Brave MCP. For **Claude Code** and **Claude Desktop** the official `@brave/brave-search-mcp-server` package runs locally via npx - no hosting required, just an API key. For **Claude.ai web** the MCP has to be reachable over HTTPS. One helper that bridges a local stdio MCP server to Streamable HTTP with OAuth / JWT is [`@ilities/local-ctx`](https://github.com/Ilities/local-ctx). TLS and public reachability then come from a tunnelling service of choice - e.g., [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/), [Tailscale Funnel](https://tailscale.com/kb/1223/funnel), and many others. Skip Brave on Claude.ai web if none of that is set up.
 
 If the Brave API key is unavailable or not configured, skip Brave entirely. All skills treat Brave failures as silent skips and degrade to built-in `web_search` or FireCrawl. The skills work on the other MCPs alone.
 
@@ -147,7 +147,7 @@ Add MCP connectors via `Settings > Connectors`. This route uses HTTP / SSE endpo
 |-----|----------|
 | [FireCrawl MCP](https://github.com/firecrawl/firecrawl-mcp-server) | `https://mcp.firecrawl.dev/YOUR_API_KEY/v2/mcp` |
 | [Bright Data MCP](https://github.com/brightdata/brightdata-mcp) | `https://mcp.brightdata.com/mcp?token=YOUR_API_TOKEN` |
-| [Brave MCP](https://github.com/brave/brave-search-mcp-server) | No public HTTP endpoint - self-host an HTTP-wrapped bridge (e.g., `mcp-proxy`) or a tunnel such as Tailscale Funnel exposing the local stdio server. Skip if not self-hosting. |
+| [Brave MCP](https://github.com/brave/brave-search-mcp-server) | No public HTTP endpoint. Reaching a local Brave MCP from Claude.ai web requires a stdio → HTTPS bridge (e.g. [`@ilities/local-ctx`](https://github.com/Ilities/local-ctx)) plus a tunnelling service of choice (e.g. [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/), [Tailscale Funnel](https://tailscale.com/kb/1223/funnel), and many others) for TLS and reachability. Skip if not self-hosting. |
 
 Verify each MCP shows as active in the connectors list before loading skills that depend on it.
 
