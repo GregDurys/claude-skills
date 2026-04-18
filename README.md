@@ -76,6 +76,8 @@ If the Brave API key is unavailable or not configured, skip Brave entirely. All 
 
 Connect the MCP servers before installing the skills. Both Claude Code and Claude Desktop run MCPs locally via stdio; Claude.ai web uses HTTP / SSE connectors instead.
 
+> **Shortcut:** custom remote-MCP connectors added in claude.ai (Customize > Connectors) automatically sync to Claude Desktop, Cowork, mobile apps, and Claude Code - the same connectors show up in `claude mcp list` with a `claude.ai` prefix. If they're already set up there, skip the per-client sections below and the skills will use them via that shared pool.
+
 ### Claude Code (CLI)
 
 Add each MCP via `claude mcp add`. Remote endpoints are simplest where they exist; local via `npx` gives more control and is required for Brave (no public remote endpoint).
@@ -165,9 +167,10 @@ Install individual skills from the marketplace:
 /plugin marketplace add GregDurys/claude-skills
 /plugin install web-research@claude-skills
 /plugin install cve-researcher@claude-skills
+/reload-plugins
 ```
 
-Each skill installs independently. Run `/plugin install <name>@claude-skills` for each one needed. Updates arrive via `/plugin marketplace update`. Available plugin names: `web-research`, `reddit-research`, `glassdoor-research`, `linkedin-job-search`, `cve-researcher`.
+Each skill installs independently. Run `/plugin install <name>@claude-skills` for each one needed, then `/reload-plugins` once at the end to activate them without restarting the session. Updates arrive via `/plugin marketplace update` (followed by `/reload-plugins` again). Available plugin names: `web-research`, `reddit-research`, `glassdoor-research`, `linkedin-job-search`, `cve-researcher`.
 
 ### Claude Code (manual copy)
 
