@@ -18,7 +18,7 @@ See [docs/DESIGN.md](docs/DESIGN.md) for the design rationale and [docs/TESTING.
 
 ## Dependencies
 
-All three paid MCPs have meaningful free tiers. For typical personal usage, every skill in this repo can run without paying anything.
+All four paid MCPs have meaningful free tiers. For typical personal usage, every skill in this repo can run without paying anything.
 
 ### Pricing at a glance
 
