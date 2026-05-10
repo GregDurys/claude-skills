@@ -26,6 +26,7 @@ All three paid MCPs have meaningful free tiers. For typical personal usage, ever
 |------------|-----------|--------|
 | [FireCrawl MCP](https://github.com/firecrawl/firecrawl-mcp-server) | 500 credits one-time, no card | [firecrawl.dev/pricing](https://firecrawl.dev/pricing) |
 | [Bright Data MCP](https://github.com/brightdata/brightdata-mcp) | 5,000 requests/month (new MCP users) | [brightdata.com/pricing/mcp-server](https://brightdata.com/pricing/mcp-server) |
+| [Apify MCP](https://mcp.apify.com) | Free plan: $0/mo, $5 credits/month | [apify.com/pricing](https://apify.com/pricing) |
 | [Brave MCP](https://github.com/brave/brave-search-mcp-server) | Brave Search API free tier + runs locally via npx (Claude Code / Desktop) | [brave.com/search/api](https://brave.com/search/api) |
 | Built-in `web_search` / `web_fetch` | Free, unlimited | Provided by Claude |
 | NIST NVD API 2.0 (used by cve-researcher) | Free, no key required (optional key for higher rate limits) | [nvd.nist.gov/developers](https://nvd.nist.gov/developers/request-an-api-key) |
@@ -37,18 +38,20 @@ Each skill lists its own dependencies at the top of its `SKILL.md`. The full mat
 | MCP | Free tier | Paid pricing | Sign-up / setup | Used by |
 |-----|-----------|--------------|-----------------|---------|
 | Built-in `web_search` / `web_fetch` | Free, unlimited | N/A | No setup - provided by Claude | web-research, reddit-research, glassdoor-research, linkedin-job-search (all as fallback) |
-| [FireCrawl MCP](https://github.com/firecrawl/firecrawl-mcp-server) | **500 credits one-time** (no card required) | Hobby $16/mo (3K credits), Standard, Growth, Scale | Sign up at firecrawl.dev, get API key, configure the MCP endpoint. Search: 2 credits/10 results. Basic scrape: 1 credit/page. Stealth scrape: 5 credits/page. | web-research (optional), reddit-research (optional, discovery only), glassdoor-research (required), linkedin-job-search (required) |
-| [Bright Data MCP](https://github.com/brightdata/brightdata-mcp) | **5,000 requests/month** (new MCP users) | Pay-as-you-go $1.50/1K results, or $499/mo for 380K | Sign up at brightdata.com. One-time setup: run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally to provision `mcp_unlocker` and `mcp_browser` zones. | web-research (optional), reddit-research (required), linkedin-job-search (required) |
+| [FireCrawl MCP](https://github.com/firecrawl/firecrawl-mcp-server) | **500 credits one-time** (no card required) | Hobby $16/mo (3K credits), Standard, Growth, Scale | Sign up at firecrawl.dev, get API key, configure the MCP endpoint. Search: 2 credits/10 results. Basic scrape: 1 credit/page. Stealth scrape: 5 credits/page. | web-research (optional), reddit-research (optional, discovery only), glassdoor-research (required) |
+| [Bright Data MCP](https://github.com/brightdata/brightdata-mcp) | **5,000 requests/month** (new MCP users) | Pay-as-you-go $1.50/1K results, or $499/mo for 380K | Sign up at brightdata.com. One-time setup: run `API_TOKEN=<token> PRO_MODE=true npx -y @brightdata/mcp` locally to provision `mcp_unlocker` and `mcp_browser` zones. | web-research (optional), reddit-research (required), linkedin-job-search (required, Step 3 validation) |
+| [Apify MCP](https://mcp.apify.com) | **Free plan: $0/mo, $5 credits/month** | Pay-per-result: $0.001-$0.005/job depending on actor | Sign up at apify.com. Remote MCP endpoint: `https://mcp.apify.com`. | linkedin-job-search (required, Step 1 discovery) |
 | [Brave MCP](https://github.com/brave/brave-search-mcp-server) | Free (Brave Search API free tier) | Runs locally via npx (`@brave/brave-search-mcp-server`) in Claude Code and Claude Desktop - no hosting required. Claude.ai web would need an HTTP bridge. | Get a Brave Search API key at https://brave.com/search/api. See "Configuring MCPs" below for the exact Claude Code / Claude Desktop / Claude.ai setup. | All skills as optional Tier 1 free search |
 
 ### Try everything for free
 
-Both FireCrawl and Bright Data free tiers cover typical personal use:
+FireCrawl, Bright Data, and Apify free tiers cover typical personal use:
 
 - **FireCrawl 500 credits** = ~500 basic page scrapes, ~100 Glassdoor stealth scrapes, ~2,500 search results, or any mix.
-- **Bright Data 5K requests/month** = enough for a weekly LinkedIn job run plus ongoing Reddit fetching with room to spare.
+- **Bright Data 5K requests/month** = enough for weekly LinkedIn JD validation plus ongoing Reddit fetching with room to spare.
+- **Apify $5/month credits** = enough for 4+ weekly LinkedIn job searches with room to spare (~$1.16/month actual usage).
 
-For a regular weekly LinkedIn job search + occasional Glassdoor / Reddit lookups, these two free tiers together are sufficient without ever paying.
+For a regular weekly LinkedIn job search + occasional Glassdoor / Reddit lookups, these free tiers together are sufficient without ever paying.
 
 ### Minimum set for each skill
 
@@ -59,7 +62,7 @@ For a single skill only, here is the minimum working dependency set (all have fr
 | web-research | none required (degrades to built-in tools) | yes - no sign-up needed |
 | reddit-research | Bright Data MCP | yes - 5K requests/month free |
 | glassdoor-research | FireCrawl MCP | yes - 500 credits one-time free |
-| linkedin-job-search | FireCrawl MCP + Bright Data MCP | yes - both have free tiers |
+| linkedin-job-search | Apify MCP + Bright Data MCP | yes - both have free tiers |
 | cve-researcher | Python 3 (no MCP needed - calls NVD and CISA public APIs directly) | yes - no sign-up needed for base script; VulnCheck cross-reference needs free key |
 
 Brave is always optional.
@@ -102,6 +105,13 @@ claude mcp add --transport http --scope user brightdata "https://mcp.brightdata.
 claude mcp add --scope user -e API_TOKEN=YOUR_API_TOKEN -e PRO_MODE=true brightdata -- npx -y @brightdata/mcp
 ```
 
+**Apify** - sign up at https://apify.com (free plan: $0/mo, $5 monthly credits):
+
+```bash
+# Remote hosted (simplest - Apify's own MCP endpoint)
+claude mcp add --transport http --scope user apify https://mcp.apify.com
+```
+
 **Brave** (optional) - no public remote Brave MCP. The official `@brave/brave-search-mcp-server` package runs locally via npx; get a free API key at https://brave.com/search/api:
 
 ```bash
@@ -139,6 +149,8 @@ Edit the config file and add entries under `mcpServers`:
 }
 ```
 
+For Apify, use the claude.ai Connectors sync shortcut (Settings > Customize > Connectors, URL: `https://mcp.apify.com`) rather than the config file - Apify's MCP is a remote HTTP endpoint, not a local stdio command.
+
 Restart Claude Desktop after editing. Include only the required MCPs; remove entries for services not in use. Claude Desktop's native config is stdio-based - HTTP / SSE endpoints go through `Settings > Integrations` or a local bridge; stdio above is usually the simplest path.
 
 ### Claude.ai (web)
@@ -149,6 +161,7 @@ Add MCP connectors via `Settings > Connectors`. This route uses HTTP / SSE endpo
 |-----|----------|
 | [FireCrawl MCP](https://github.com/firecrawl/firecrawl-mcp-server) | `https://mcp.firecrawl.dev/YOUR_API_KEY/v2/mcp` |
 | [Bright Data MCP](https://github.com/brightdata/brightdata-mcp) | `https://mcp.brightdata.com/mcp?token=YOUR_API_TOKEN` |
+| [Apify MCP](https://mcp.apify.com) | `https://mcp.apify.com` |
 | [Brave MCP](https://github.com/brave/brave-search-mcp-server) | No public HTTP endpoint. Reaching a local Brave MCP from Claude.ai web requires a stdio → HTTPS bridge (e.g. [`@ilities/local-ctx`](https://github.com/Ilities/local-ctx)) plus a tunnelling service of choice (e.g. [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/), [Tailscale Funnel](https://tailscale.com/kb/1223/funnel), and many others) for TLS and reachability. Skip if not self-hosting. |
 
 Verify each MCP shows as active in the connectors list before loading skills that depend on it.

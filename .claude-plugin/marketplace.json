@@ -35,10 +35,10 @@
     {
       "name": "linkedin-job-search",
       "source": "./plugins/linkedin-job-search",
-      "description": "Search LinkedIn for job listings via dual-tool discovery (FireCrawl + Bright Data Discover), retrieve structured JDs with application status, and triage against a configurable profile",
-      "version": "1.5.0",
+      "description": "Search LinkedIn for job listings via dual-actor discovery (Apify HarvestAPI + JobSpy on free tier), retrieve structured JDs with application status, and triage against a configurable profile",
+      "version": "1.6.0",
       "author": { "name": "Greg Durys" },
-      "keywords": ["linkedin", "jobs", "job-search", "career"]
+      "keywords": ["linkedin", "jobs", "job-search", "career", "apify"]
     },
     {
       "name": "cve-researcher",
