@@ -45,11 +45,12 @@ Each skill lists its own dependencies at the top of its `SKILL.md`. The full mat
 
 ### Try everything for free
 
-FireCrawl, Bright Data, and Apify free tiers cover typical personal use:
+FireCrawl, Bright Data, Apify, and Brave free tiers cover typical personal use:
 
 - **FireCrawl 500 credits** = ~500 basic page scrapes, ~100 Glassdoor stealth scrapes, ~2,500 search results, or any mix.
 - **Bright Data 5K requests/month** = enough for weekly LinkedIn JD validation plus ongoing Reddit fetching with room to spare.
 - **Apify $5/month credits** = enough for 4+ weekly LinkedIn job searches with room to spare (~$1.16/month actual usage).
+- **Brave Search API** = free tier available at brave.com/search/api. Used as optional Tier 1 free search across multiple skills.
 
 For a regular weekly LinkedIn job search + occasional Glassdoor / Reddit lookups, these free tiers together are sufficient without ever paying.
 
