@@ -2,7 +2,7 @@
 
 Live test results for each skill in this repo, run against the MCP tools on the test date. Tests confirm each documented tier works end-to-end.
 
-**Test date:** 2026-04-17
+**Test date:** 2026-05-10 (linkedin-job-search T10-T12 re-run for v1.6; other tests from 2026-04-17)
 
 ---
 
@@ -19,9 +19,9 @@ Live test results for each skill in this repo, run against the MCP tools on the 
 | T7 | reddit-research | `firecrawl_scrape` on reddit.com URL | any reddit thread | BLOCKED (documented behaviour) | PASS (block confirmed) |
 | T8 | glassdoor-research | `firecrawl_scrape` with `proxy: "stealth"` | https://www.glassdoor.co.uk/Reviews/Google-Reviews-E9079.htm | Review content in markdown | PASS (5 credits, 47K reviews, rating 4.4/5 surfaced) |
 | T9 | glassdoor-research | `firecrawl_search` | query: `site:glassdoor.co.uk Google reviews`, limit 3 | Valid employer page URLs | PASS (3 employer URLs) |
-| T10 | linkedin-job-search | `firecrawl_search` | query: `site:linkedin.com/jobs/view "Software Engineer" United Kingdom`, tbs: `sbd:1,qdr:w`, limit 10 | >= 3 linkedin.com/jobs/view URLs | PASS (10 URLs) |
-| T11 | linkedin-job-search | `Brightdata pro:scrape_as_markdown` | one URL from T10 (Checkout.com Senior SWE) | Full JD text with role + company + requirements | PASS (full JD, including company description, job description, requirements, seniority) |
-| T12 | linkedin-job-search | `firecrawl_scrape` on linkedin.com URL | same URL as T11 | BLOCKED (documented behaviour) | PASS (block confirmed - "we do not support this site") |
+| T10 | linkedin-job-search | `Ampify:call-actor` (harvestapi/linkedin-job-search) | title: "Software Engineer", location: "United Kingdom", maxItems: 5 | >= 3 results with title, company, linkedinUrl, postedDate | PASS (5 results; Hyra, WSP, Sophos, Capgemini, Accenture; all with valid linkedin.com/jobs/view URLs) |
+| T11 | linkedin-job-search | `Ampify:call-actor` (openclawai/linkedin-jobs-scraper-jobspy) | searchTerm: "Kubernetes", location: "United Kingdom", maxResults: 5 | >= 3 results with title, company_name, job_url | PASS (5 results; EKS Engineer, DevOps Engineer, SRE; all with valid job_url fields) |
+| T12 | linkedin-job-search | `Brightdata pro:web_data_linkedin_job_listings` | URL from T10 (linkedin.com/jobs/view/4410468312) | Structured JSON with application_availability, job_summary, job_num_applicants, job_posted_date | PASS (application_availability: true, full JD text, company: Hyra, seniority: Mid-Senior, employment: Full-time) |
 | T13 | cve-researcher | `scripts/cve_pull.py` | `-k mikrotik --since 2024-01-01 --until 2024-12-31` | CSV + summary MD written, 120-day date chunking applied, CISA KEV loaded | PASS (2 CVEs returned; CSV + summary both written; 1569 KEV entries loaded; chunked into 4 x 120-day windows correctly) |
 | T14 | cve-researcher | `scripts/vulncheck_pull.py` with no API key | `-v mikrotik` with `VULNCHECK_API_KEY` unset | WARNING logged, exit 0, suggests cve_pull.py alternative | PASS (warning printed, exit code 0, points to cve_pull.py) |
 
@@ -29,14 +29,15 @@ Live test results for each skill in this repo, run against the MCP tools on the 
 
 ---
 
-## LinkedIn Apify-free gate
+## LinkedIn dual-actor gate (v1.6)
 
-The critical gate for LinkedIn publication was that T10 (FireCrawl job URL discovery) and T11 (Bright Data JD scrape) must both pass without needing an Apify key.
+The LinkedIn skill uses two Apify actors for Step 1 discovery, plus Bright Data for Step 3 validation. All three must pass:
 
-- **T10:** PASS - FireCrawl returned 10 valid `linkedin.com/jobs/view/<id>` URLs with titles and snippets.
-- **T11:** PASS - Bright Data returned the full JD for one of those URLs, including company description, role description, requirements, seniority level, and employment type.
+- **T10 (HarvestAPI):** PASS - returned 5 jobs with structured data (title, company.name, location, linkedinUrl, postedDate, applicants). Titles include standard IC roles (Software Engineer, Senior Scala Engineer, Managing Engineer).
+- **T11 (JobSpy):** PASS - returned 5 jobs via JD-body keyword search ("Kubernetes"). Titles include DevOps Engineer, EKS Engineer, SRE - demonstrating body-text matching (these don't have "Kubernetes" in the title).
+- **T12 (web_data_linkedin_job_listings):** PASS - returned full structured JSON for one URL from T10, including `application_availability: true`, complete `job_summary`, `job_seniority_level`, `job_employment_type`, and `job_posted_date`.
 
-The LinkedIn skill is therefore published in this repo. It operates on FireCrawl + Bright Data alone; no Apify dependency.
+The LinkedIn skill operates on Apify (free tier, $5/month credits) + Bright Data (5K requests/month free). FireCrawl is no longer a dependency for job search (still used by glassdoor-research and web-research).
 
 ---
 
@@ -48,14 +49,13 @@ The LinkedIn skill is therefore published in this repo. It operates on FireCrawl
 
 The reddit-research skill steers users to `Brightdata pro:web_data_reddit_posts` (primary) or `Brightdata pro:scrape_as_markdown` (fallback) for Reddit content.
 
-**T12 (FireCrawl on linkedin.com):** Same block, same error message. The linkedin-job-search skill documents this and uses Bright Data for all LinkedIn JD scraping.
-
 ---
 
 ## Notes on dependencies
 
 - **Bright Data MCP:** required for reddit-research (Step 2) and linkedin-job-search (Step 3). Without it those skills have no way to retrieve the content they need. Free tier: 5,000 requests/month for new MCP users - covers a weekly LinkedIn run plus Reddit lookups easily.
-- **FireCrawl:** required for glassdoor-research (Step 2), linkedin-job-search (Step 1), and recommended for web-research fallbacks. Free tier: 500 credits one-time (no card) - sufficient to run the full test suite in this doc and still have credits left over.
+- **FireCrawl:** required for glassdoor-research (Step 2) and recommended for web-research fallbacks. No longer used by linkedin-job-search (replaced by Apify actors in v1.6). Free tier: 500 credits one-time (no card).
+- **Apify MCP:** required for linkedin-job-search (Step 1, two actors: HarvestAPI for title search, JobSpy for keyword/body search). Free plan: $0/mo subscription, $5/month credits. Weekly job search costs ~$0.29.
 - **Brave MCP:** optional everywhere. All four web-research-family skills degrade gracefully to built-in `web_search` or FireCrawl when Brave is unavailable.
 - **NIST NVD API + CISA KEV:** used by cve-researcher. Free, no key required. An optional NVD API key raises the rate limit from 5 req/30s to 50 req/30s.
 - **VulnCheck NVD++:** used by cve-researcher as a cross-reference. Free community tier, key required (read from `VULNCHECK_API_KEY` env var only - no CLI flag, to avoid keys in shell history).
@@ -66,10 +66,11 @@ See each SKILL.md's Dependencies table at the top for full detail.
 
 The entire test run documented above used roughly:
 
-- **FireCrawl:** 12 credits (4 searches at 2 credits each + 5 scrapes at 1-5 credits each).
-- **Bright Data:** 2 requests (1 LinkedIn JD scrape + 1 Reddit thread fetch).
+- **FireCrawl:** 12 credits (4 searches at 2 credits each + 3 scrapes at 1-5 credits each).
+- **Bright Data:** 2 requests (1 LinkedIn JD validation + 1 Reddit thread fetch).
+- **Apify:** ~$0.03 (5 HarvestAPI results at $0.001 + 5 JobSpy results at $0.005).
 
-Both well inside the respective free tiers.
+All well inside the respective free tiers.
 
 ---
 
