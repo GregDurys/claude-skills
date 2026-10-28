@@ -28,7 +28,7 @@ Search LinkedIn job listings, retrieve full JDs, and present a triaged shortlist
 
 | MCP | Required? | Cost | Role in skill |
 |-----|-----------|------|---------------|
-| [Apify MCP](https://mcp.apify.com) | Yes | **Free plan: $0/mo, $5 credits/month.** HarvestAPI: $0.001/job. JobSpy: $0.005/job. Weekly run ~$0.29, monthly ~$1.16. No card required. | Step 1: Primary job discovery via two actors |
+| [Apify MCP](https://mcp.apify.com) | Yes | **Free plan: $0/mo, $5 credits/month.** HarvestAPI: $0.001/job. linkedin-jobs-api: ~$0.00002/job. Weekly run ~$0.04, monthly ~$0.16. No card required. | Step 1: Primary job discovery via two actors |
 | [Bright Data MCP](https://github.com/brightdata/brightdata-mcp) | Yes | **5,000 requests/month free** | Step 3: JD validation via `web_data_linkedin_job_listings` |
 | [FireCrawl MCP](https://github.com/firecrawl/firecrawl-mcp-server) | No (for job search) | $16/mo or free credits | NOT used for job search. Retained for Glassdoor stealth scraping and general web research. |
 
@@ -59,7 +59,7 @@ This skill is a **framework**. Edit the placeholder markers below with your own 
 Define 3-4 groups split across two actors based on what each tool is good at:
 
 - **HarvestAPI** (`harvestapi/linkedin-job-search`) - best for standard role titles. Uses LinkedIn's internal search API. Cheap ($0.001/job). Bad for cert keywords or creative titles (returns zero).
-- **JobSpy** (`openclawai/linkedin-jobs-scraper-jobspy`) - best for keywords that appear in JD body text, cert names, non-standard titles. Uses LinkedIn's public search page. Costlier ($0.005/job). Genuinely searches JD body text, not just titles.
+- **linkedin-jobs-api** (`johnvc/linkedin-jobs-api`) - best for keywords that appear in JD body text, cert names, non-standard titles. Uses LinkedIn's public search page, one keyword per run. ~$0.00002/job.
 
 **Example shape** (for an offensive-security practitioner - replace with your own terms):
 
@@ -67,25 +67,25 @@ Define 3-4 groups split across two actors based on what each tool is good at:
 
 1. **Group A (core roles) - HarvestAPI:** `"Penetration Tester"`, `"Red Team"`, `"Offensive Security"`
 2. **Group B (specialist) - HarvestAPI:** `"Vulnerability Researcher"`, `"Threat Hunter"`, `"Purple Team"`
-3. **Group C (high-precision keyword) - JobSpy:** `"Adversary Simulation"` - terms with very high precision tested in coverage experiments
+3. **Group C (high-precision keyword) - linkedin-jobs-api:** `"Adversary Simulation"` - terms with very high precision tested in coverage experiments
 
 **Weekly-only groups** (full passes only, not daily):
 
-4. **Group D (cert-keyword + creative titles) - JobSpy:** `"OSCP"`, `"CRTO"`, `"Proactive Threat Defence"` - keywords that find roles invisible to title-based search but have higher noise rates
+4. **Group D (cert-keyword + creative titles) - linkedin-jobs-api:** `"OSCP"`, `"CRTO"`, `"Proactive Threat Defence"` - keywords that find roles invisible to title-based search but have higher noise rates
 
 **Deciding which actor for each group:**
 
 | If the search term is... | Use | Why |
 |--------------------------|-----|-----|
 | A standard job title ("Data Engineer", "Penetration Tester") | HarvestAPI | Cheap, good at title matching |
-| A certification or skill keyword ("OSCP", "Kubernetes") | JobSpy | HarvestAPI returns zero for cert keywords |
-| A creative/non-standard title ("Proactive Threat Defence") | JobSpy | HarvestAPI only matches standard LinkedIn title fields |
+| A certification or skill keyword ("OSCP", "Kubernetes") | linkedin-jobs-api | HarvestAPI returns zero for cert keywords |
+| A creative/non-standard title ("Proactive Threat Defence") | linkedin-jobs-api | HarvestAPI only matches standard LinkedIn title fields |
 | A broad term with expected noise ("Security Consultant") | Either, but add filter-on-content rule | Both tools return noise for broad terms |
 
 ### Terms to avoid (and why)
 
 - **Overly broad titles** - match hundreds of roles spanning unrelated disciplines. Test by running once and checking the noise rate. If >70% irrelevant, drop the term.
-- **Bare certification names in HarvestAPI** - HarvestAPI treats cert names as job titles and returns zero results. Use JobSpy for cert-keyword search.
+- **Bare certification names in HarvestAPI** - HarvestAPI treats cert names as job titles and returns zero results. Use linkedin-jobs-api for cert-keyword search.
 - **Acronyms with multiple meanings** - too ambiguous for job search.
 
 ### Filter-on-content rules
@@ -128,50 +128,52 @@ datasetId: [from call result]
 fields: title,company.name,location.linkedinText,postedDate,applicants,salary.text,linkedinUrl,workplaceType
 ```
 
-### JobSpy groups (keyword/body search)
+### linkedin-jobs-api groups (keyword/body search)
 
-Run each keyword as a separate call (one `searchTerm` per call):
+Run each keyword as a separate call (one `keyword` per call). Use `"timeRange": "past-week"` on weekly full runs and `"past-day"` on daily catch-ups:
 
 ```
 Tool: Ampify:call-actor
-actor: openclawai/linkedin-jobs-scraper-jobspy
+actor: johnvc/linkedin-jobs-api
 previewOutput: false
 input: {
-  "searchTerm": "[KEYWORD]",
+  "keyword": "[KEYWORD]",
   "location": "<TARGET_LOCATIONS>",
-  "maxResults": 10,
-  "hoursOld": 168,
-  "linkedinFetchDescription": false
+  "timeRange": "past-week",
+  "maxJobs": 10
 }
 ```
+
+A search can take a minute or more, longer than the 45-second MCP limit. If the call returns before the run has finished, check it with `Ampify:get-actor-run` until it has SUCCEEDED rather than starting it again.
 
 Then retrieve results:
 
 ```
 Tool: Ampify:get-actor-output
 datasetId: [from call result]
-fields: title,company_name,location,job_url
+fields: title,companyName,location,jobUrl,jobId
 ```
 
-**JobSpy parameter reference:**
+Add `description` to `fields` if you need the full JD text.
+
+**linkedin-jobs-api parameter reference:**
 
 | Parameter | Type | Notes |
 |-----------|------|-------|
-| `searchTerm` | string | Single keyword/phrase |
-| `searchTerms` | array | Multiple terms (merged, deduplicated). Max 5. |
+| `keyword` | string | Single keyword/phrase. One per call. |
 | `location` | string | e.g. "United Kingdom" |
-| `maxResults` | integer | Max jobs per term. Default 50, use 10 to save credits. |
-| `hoursOld` | integer | Posted within N hours. 168 = last week, 720 = last month. |
-| `linkedinFetchDescription` | boolean | Fetch full JD text. Slower. Set false for discovery, true if needed. |
-| `linkedinCompanyIds` | array | Company IDs for targeted search. |
-| `isRemote` | boolean | Remote only filter. |
-| `jobType` | string | "fulltime", "parttime", "contract", "internship", "temporary" |
+| `country` | string | Optional two-letter code, e.g. "GB". |
+| `timeRange` | string | "past-day", "past-week" or "past-month". |
+| `maxJobs` | integer | Max jobs per search. Default 25, use 10 to keep runs short. |
+| `company` | string | Company name for targeted search. |
+| `remote` | boolean | Remote only filter. |
+| `jobType` | string | "full-time", "part-time", "contract", "temporary", "internship", "volunteer" |
 
 **Do NOT use the salary filter** on either actor - it excludes jobs without listed salary. Filter at presentation time.
 
 ### Deduplication
 
-Extract LinkedIn job IDs from URLs returned by both actors. Merge into a single set before Step 2. HarvestAPI returns `linkedinUrl`, JobSpy returns `job_url`.
+Extract LinkedIn job IDs from URLs returned by both actors. Merge into a single set before Step 2. HarvestAPI returns `linkedinUrl`, linkedin-jobs-api returns `jobUrl` (and the ID itself in `jobId`).
 
 ### Timeout prevention (HarvestAPI)
 
@@ -185,17 +187,17 @@ Extract LinkedIn job IDs from URLs returned by both actors. Merge into a single 
 | Actor | Cost/job | Weekly usage (est.) | Monthly (est.) |
 |-------|---------|-------------------|---------------|
 | HarvestAPI (title groups) | $0.001 | 2 calls x 20 results = 40 jobs = $0.04 | $0.16 |
-| JobSpy (every-run keywords) | $0.005 | 1 call x 10 results = $0.05 | $0.20 |
-| JobSpy (weekly-only keywords) | $0.005 | 4 calls x 10 results = $0.20 | $0.80 |
-| **Total** | | **$0.29/week** | **$1.16/month** |
+| linkedin-jobs-api (every-run keywords) | ~$0.00002 | 1 call x 10 results = $0.0002 | $0.0008 |
+| linkedin-jobs-api (weekly-only keywords) | ~$0.00002 | 4 calls x 10 results = $0.0008 | $0.0032 |
+| **Total** | | **~$0.04/week** | **~$0.16/month** |
 
-Well within $5/month free credits. For daily catch-ups, run every-run groups only (~$0.09).
+Well within $5/month free credits. For daily catch-ups, run every-run groups only (~$0.04).
 
 ---
 
 ## Step 2: Triage
 
-Apply keep/drop rules to results from Step 1. HarvestAPI results have title, company, location, workplace type. JobSpy results have title, company_name, location, job_url. Triage on these before Step 3.
+Apply keep/drop rules to results from Step 1. HarvestAPI results have title, company, location, workplace type. linkedin-jobs-api results have title, companyName, location, jobUrl. Triage on these before Step 3.
 
 ### Always-exclude (framework)
 
@@ -320,11 +322,11 @@ After every full run, record:
 
 **HarvestAPI duplicates:** ~39% duplicate rate observed. Deduplicate by job ID before triage.
 
-**HarvestAPI returns 0 for cert keywords:** Expected. HarvestAPI treats cert names as job titles and finds nothing. Use JobSpy for cert-keyword groups.
+**HarvestAPI returns 0 for cert keywords:** Expected. HarvestAPI treats cert names as job titles and finds nothing. Use linkedin-jobs-api for cert-keyword groups.
 
-**JobSpy permissions error:** First-time use requires approval. Click the URL in the error message.
+**linkedin-jobs-api permissions error:** First-time use requires approval. Click the URL in the error message.
 
-**JobSpy returns off-domain roles for cert groups:** Expected noise. Certs appear in JDs across multiple domains. Apply filter-on-content rule.
+**linkedin-jobs-api returns off-domain roles for cert groups:** Expected noise. Certs appear in JDs across multiple domains. Apply filter-on-content rule.
 
 **Apify credits exhausted:** Free plan blocks until next billing cycle. No overage. Wait for reset or skip weekly-only groups. Every-run groups are higher priority.
 
